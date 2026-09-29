@@ -149,6 +149,36 @@ docker compose restart cowrie
 Cowrie accepts those, and nothing else. It is a fake database for a fake server — the values
 do not matter at all.
 
+### "It hung" when it did not: the terminal lies, the log does not
+
+On Windows, cowrie's fake shell frequently renders **nothing at all** — no prompt, and
+sometimes no echo of what you type. Cowrie's PTY does not map cleanly onto Windows' console
+(conpty), so the session is genuinely open and working while your terminal looks dead.
+
+If you think it has hung, check the log before you believe it:
+
+```bash
+grep -E 'login.success|login.failed|session.connect' /root/cowrie/var/log/cowrie/cowrie.json | tail -5
+```
+
+`cowrie.login.success` means the honeypot caught a login, which is the entire point of the
+exercise — even if your screen never drew a prompt. An `ssh -vvv` output that ends with
+`Authenticated to <host> using "password"` followed by `shell request accepted` is a
+**working honeypot**, not a broken one.
+
+Workarounds, in order of effort:
+
+- press Enter, then type `ls` — cowrie prints nothing until you give it input, so a silent
+  screen is normal
+- connect from a Linux or macOS host, or use PuTTY instead of the built-in Windows client.
+  A real PTY behaves correctly where conpty may not.
+- test from the sensor itself (`ssh -o StrictHostKeyChecking=no root@127.0.0.1`) to prove the
+  honeypot side is fine
+
+Note that your own SSH keys will **never** work here: cowrie rejects them by design and
+offers password authentication only. If `-vvv` shows your keys being refused one by one and
+then a password prompt, that is the honeypot behaving exactly as intended.
+
 ### If nothing responds at all, work out who answered you
 
 An SSH banner does not tell you whether it came from cowrie or from a real sshd. Two checks,
