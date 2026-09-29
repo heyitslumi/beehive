@@ -129,15 +129,33 @@ docker compose logs -f | head -20     # you want: ready to accept connections
 - **do not make it too interesting.** A box that looks like a juicy corporate database
   invites people who are actually good at this.
 
-Also create the bait files (see `cowrie/honeyfs/root/README.md`) — fake key material and a
-fake wallet seed are exfiltrated within minutes and cost you nothing:
+### How decoy files (honeyfs) actually work in Cowrie
 
-```bash
-cat >/root/cowrie/honeyfs/root/wallet_backup.txt <<'EOF'
-wallet seed phrase backup
-abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
-EOF
+A common trap: creating files under `honeyfs/root/` and expecting them to appear in `ls /root`
+when you log in. **They will not show up.**
+
+Cowrie's simulated filesystem has two distinct parts:
+1. **The virtual tree (`fs.pickle`):** Cowrie does not scan your host disk for `ls`. Directory
+   listings and file metadata (permissions, owner, size) are loaded entirely from an internal
+   serialized filesystem (`fs.pickle`). By default, `/root` only contains `.bashrc` and `.profile`.
+2. **File contents (`honeyfs`):** When an attacker reads a file (`cat /etc/passwd`), Cowrie
+   checks `honeyfs` for custom content. If present, it serves that content; otherwise it falls
+   back to the default pickle bytes.
+
+**To customize existing files (like `/etc/motd` or `/etc/issue.net`):**
+Mount `./honeyfs` into the container in `docker-compose.yml`:
+```yaml
+    volumes:
+      ...
+      - ./honeyfs:/cowrie/cowrie-git/honeyfs:ro
 ```
+Set `contents_path = honeyfs` under `[honeypot]` in `cowrie.cfg`, and place your custom file at
+`honeyfs/etc/motd`.
+
+**To make brand-new files (like `/root/wallet_backup.txt`) appear in `ls`:**
+Because `ls` reads `fs.pickle`, new file paths must be registered in the pickle itself using
+Cowrie's `fsctl` tool (`fsctl fs.pickle` -> `touch /root/wallet_backup.txt` -> `load ...`). Without
+a pickle entry, Cowrie does not know the file exists and `ls` will ignore it.
 
 ## 3. Watch your first event
 
