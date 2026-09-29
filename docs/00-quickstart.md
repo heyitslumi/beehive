@@ -67,6 +67,7 @@ docker --version
 docker compose version
 
 mkdir -p /root/cowrie/etc /root/cowrie/var/log/cowrie /root/cowrie/var/lib/cowrie
+mkdir -p /root/cowrie/var/lib/cowrie/tty /root/cowrie/var/lib/cowrie/state /root/cowrie/var/lib/cowrie/downloads
 mkdir -p /root/cowrie/honeyfs/root
 
 # IMPORTANT. The image runs as uid:gid 999:999 (its own `cowrie` user) and has no PUID
