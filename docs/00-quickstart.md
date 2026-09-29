@@ -1,8 +1,9 @@
 # Quickstart: from a bare VPS to your first captured login
 
 This walks one sensor, end to end, then shows how to add eight more and get them into
-Grafana. It assumes Debian 12/13 and root, and it is written in the order that avoids
-locking yourself out.
+Grafana. It works on Debian 12/13 and Ubuntu 22.04+/24.04, assumes root, and is written in
+the order that avoids locking yourself out. The distributions differ in exactly one place —
+the name of the compose package — and step 2 gives the portable route plus both distro names.
 
 Budget an evening for the first one. The second takes ten minutes.
 
@@ -54,7 +55,32 @@ ss -tlnp | grep ':22 ' || echo "22 is free"
 ## 2. Install cowrie
 
 ```bash
-apt-get update && apt-get install -y docker.io docker-compose-v2 git
+apt-get update && apt-get install -y git
+
+# Docker. The distro packages disagree on names -- Ubuntu has docker-compose-v2, Debian 13
+# calls it docker-compose-plugin, and Debian 12 ships no v2 compose at all (only the old
+# python one). Use Docker's own repository and the commands are identical on both.
+#
+# Swap 'debian' for 'ubuntu' in the two URLs and the codename comes out right either way.
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
+  > /etc/apt/sources.list.d/docker.list
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Prefer distro packages? Then:
+#   Ubuntu 24.04   apt-get install -y docker.io docker-compose-v2
+#   Debian 13      apt-get install -y docker.io docker-compose-plugin
+#   Debian 12      don't -- use the repository above
+
+# Verify before going further. "docker: 'compose' is not a docker command" is a confusing
+# failure to hit at 2am, and it means the plugin is missing.
+docker --version
+docker compose version
+
 mkdir -p /root/cowrie/etc /root/cowrie/var/log/cowrie /root/cowrie/var/lib/cowrie
 mkdir -p /root/cowrie/honeyfs/root
 
