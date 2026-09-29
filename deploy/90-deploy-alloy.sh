@@ -1,17 +1,19 @@
 #!/bin/bash
 # Deploy Grafana Alloy on every node and ship host metrics to Grafana Cloud.
 #
-# Reads the token from /root/hp/alloy-token (never echoed, never passed on a command line).
-# Each node's config is generated locally and copied up, then deleted from the transfer
-# path: shipping a heredoc over ssh via `declare -f` indentation breaks the EOF terminator,
-# and a broken alloy config fails silently.
+# Reads the token from ALLOY_TOKEN_FILE (default: ./alloy-token or ~/.config/beehive/alloy-token).
+# You can also pass GRAFANA_USER_ID, GRAFANA_PUSH_URL, and NODES as environment variables.
 set -uo pipefail
-TOKEN_FILE=/root/hp/alloy-token
-USER_ID=3619744
-PUSH_URL="https://prometheus-prod-58-prod-eu-central-0.grafana.net/api/prom/push"
-NODES="sensor1 sensor2 sensor3 sensor4 sensor5 sensor6 sensor7 sensor8 sensor9"
+TOKEN_FILE="${ALLOY_TOKEN_FILE:-./alloy-token}"
+USER_ID="${GRAFANA_USER_ID:-3619744}"
+PUSH_URL="${GRAFANA_PUSH_URL:-https://prometheus-prod-58-prod-eu-central-0.grafana.net/api/prom/push}"
+NODES="${NODES:-sensor1}"
 
-[ -s "$TOKEN_FILE" ] || { echo "STOP: no token at $TOKEN_FILE"; exit 1; }
+if [ ! -s "$TOKEN_FILE" ]; then
+  echo "STOP: no token at $TOKEN_FILE"
+  echo "Create $TOKEN_FILE with your Grafana Cloud metrics token, or set ALLOY_TOKEN_FILE=/path/to/token"
+  exit 1
+fi
 TOKEN=$(tr -d '\n\r ' < "$TOKEN_FILE")
 [ -n "$TOKEN" ] || { echo "STOP: token file blank"; exit 1; }
 echo "token loaded (${#TOKEN} chars, value withheld)"

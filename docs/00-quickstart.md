@@ -300,14 +300,35 @@ If one node is in another datacenter and needs a public IPv4 that currently live
 sibling, `docs/02-moving-a-public-ip.md` is the whole recipe, including why the obvious VPN
 approach silently fails.
 
-## 6. Metrics, dashboards, alerts
+## 6. Metrics, dashboards, alerts (optional)
 
-1. Install Grafana Alloy on every sensor (`deploy/90-deploy-alloy.sh`) and remote-write host
-   metrics to Grafana Cloud. Label each series with the node name.
-2. Import `grafana/*.json` as dashboards. They use an Infinity datasource for the
-   aggregator's JSON and a Prometheus datasource for host metrics.
-3. Create the alert rules. Three are worth having immediately: disk > 85%, memory > 90%,
-   and **node stopped reporting**.
+*Note: If you just want a honeypot capturing logs on your VPS, you can stop at step 4! Step 6 is only needed if you want Grafana dashboards and Discord alerts.*
+
+### 1. Host Metrics with Grafana Alloy
+Grafana Alloy collects CPU, RAM, disk, and system stats and pushes them to Prometheus / Grafana Cloud.
+
+1. In Grafana Cloud, open **Connections → Hosted Prometheus Metrics** and copy your **Remote Write Endpoint**, **Username / Instance ID**, and an **Access Token**.
+2. Save your token to an `alloy-token` file (chmod 600) or specify its path via `ALLOY_TOKEN_FILE`:
+   ```bash
+   echo "glc_your_token_here" > deploy/alloy-token
+   chmod 600 deploy/alloy-token
+   ```
+3. Run `deploy/90-deploy-alloy.sh` (or set `GRAFANA_USER_ID`, `GRAFANA_PUSH_URL`, and `NODES` to target your sensor(s)):
+   ```bash
+   GRAFANA_USER_ID=123456 \
+   GRAFANA_PUSH_URL=https://prometheus-prod-.../api/prom/push \
+   NODES="sensor1" \
+   ALLOY_TOKEN_FILE=deploy/alloy-token \
+   bash deploy/90-deploy-alloy.sh
+   ```
+
+### 2. Dashboards
+Import the JSON files from `grafana/` into your Grafana instance:
+- **`grafana/fleet-health.json`:** Visualizes host metrics (CPU, RAM, disk) scraped by Alloy from Prometheus.
+- **`grafana/cowrie-dashboard.json`:** Visualizes honeypot attack metrics. Requires the free **Grafana Infinity datasource** configured to point to your sensor's dashboard API (`http://<tailnet-ip>:8099`).
+
+### 3. Alert Rules
+Import or recreate the alert rules from `grafana/fleet-alert-rules.json`. Three are worth having immediately: disk > 85%, memory > 90%, and **node stopped reporting**.
 
 ### The two alerting mistakes everybody makes
 
