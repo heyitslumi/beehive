@@ -125,9 +125,52 @@ EOF
 From **a different machine** (a different IP — otherwise you are just watching yourself):
 
 ```bash
-ssh -o StrictHostKeyChecking=no whatever@<your-vps-public-ip> -p 22
-# type any password twice; cowrie will accept it and give you a fake shell
+ssh -o StrictHostKeyChecking=no root@<your-vps-public-ip>
 ```
+
+**You will see a password prompt and, when you type, nothing will appear.** No asterisks, no
+movement, nothing. That is not a hang — ssh never echoes passwords, on Windows or anywhere
+else. Type it blind and press Enter.
+
+One of two things then happens, and **both mean the honeypot is working**:
+
+- a fake shell prompt appears (usually `<hostname>:~#`) — you are inside cowrie's sandbox
+- `Permission denied, please try again.` — also cowrie; the password you typed simply is not
+  in its fake user database
+
+To make your first login *clean*, add the credentials you are going to type to the fake
+database before you test. `etc/userdb.txt` takes `username:x:password` lines:
+
+```bash
+printf 'root:x:whateverpasswordyoutype\n' >> /root/cowrie/etc/userdb.txt
+docker compose restart cowrie
+```
+
+Cowrie accepts those, and nothing else. It is a fake database for a fake server — the values
+do not matter at all.
+
+### If nothing responds at all, work out who answered you
+
+An SSH banner does not tell you whether it came from cowrie or from a real sshd. Two checks,
+in this order:
+
+```bash
+# 1. who actually owns port 22 on the host?
+ss -tlnp | grep -E ':22 |:2222 '
+
+# 2. did cowrie log the connection? this is the authoritative answer
+tail -n 5 /root/cowrie/var/log/cowrie/cowrie.json
+```
+
+- log shows your connection (`cowrie.session.connect`, your IP) → you are talking to cowrie.
+  If the session then stalls, it is a client-side or session issue, not the honeypot.
+- log shows **nothing** while you know you connected → that prompt came from your **real
+  sshd**, which means step 1 did not actually free port 22, or the `22:2222` mapping failed to
+  bind because something else already held it.
+
+Note that if your real sshd never left port 22, `docker compose up` will usually refuse to
+start with `port is already allocated` — but "usually" is doing work in that sentence, so
+check rather than assume.
 
 Then on the sensor:
 
