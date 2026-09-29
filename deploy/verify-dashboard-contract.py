@@ -6,7 +6,19 @@ key = "No data" in the panel.
 import json
 import urllib.request
 
-BASE = "https://sensor1.example.com/api/node"
+import os
+import sys
+
+BASE = os.environ.get("BEEHIVE_API_URL")
+if not BASE:
+    if len(sys.argv) > 1:
+        BASE = sys.argv[1].rstrip("/")
+    else:
+        print("Usage: python3 deploy/verify-dashboard-contract.py <AGGREGATOR_URL>")
+        print("   or: BEEHIVE_API_URL=http://localhost:8000/api/node python3 deploy/verify-dashboard-contract.py")
+        print("")
+        print("Error: No aggregator URL provided. Set BEEHIVE_API_URL or pass URL as argument 1.")
+        sys.exit(1)
 PANELS = {
     1: ("all", ["nodes_reporting"]),                       # stat: nodes reporting
     2: ("all", ["worst_disk_pct"]),                        # stat: worst disk
