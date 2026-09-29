@@ -57,8 +57,20 @@ ss -tlnp | grep ':22 ' || echo "22 is free"
 apt-get update && apt-get install -y docker.io docker-compose-v2 git
 mkdir -p /root/cowrie/etc /root/cowrie/var/log/cowrie /root/cowrie/var/lib/cowrie
 mkdir -p /root/cowrie/honeyfs/root
+
+# IMPORTANT. The image runs as uid:gid 999:999 (its own `cowrie` user) and has no PUID
+# support, but you just created these directories as root. Cowrie will not be able to
+# write into them, and you will get:
+#   PermissionError: [Errno 13] Permission denied: 'var/lib/cowrie/state'
+#   Failed to load output engine: jsonlog
+# Give the container's uid ownership of the two directories it writes to:
+chown -R 999:999 /root/cowrie/var
+
 cd /root/cowrie
 ```
+
+Config files stay root-owned and mode 644 — they are mounted read-only, so that is correct.
+Only `var/` needs the chown.
 
 A minimal `docker-compose.yml` — note the two bind-mounts that matter, one config and one
 for the patched Discord output module, so it survives container recreation:
@@ -200,6 +212,9 @@ approach silently fails.
 Collected so you do not have to rediscover them:
 
 - **`:22` before your admin port works.** The classic lockout. Verify in a second session.
+- **`PermissionError: [Errno 13] ... 'var/lib/cowrie/state'` on first start.** You created the
+  mount directories as root and the image runs as uid 999. `chown -R 999:999 /root/cowrie/var`
+  and restart. This is the single most common first-run failure and it is fixed in step 2.
 - **A dashboard bound to `0.0.0.0`.** Happened here twice.
 - **Pushing a new copy of a service file to every node.** If it hardcodes a port or bind
   address that differs per node, you have just taken the fleet down. Environment variables
