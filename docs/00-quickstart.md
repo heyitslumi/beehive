@@ -93,7 +93,14 @@ services:
 ```
 
 Copy `cowrie/cowrie.cfg.example` to `etc/cowrie.cfg`, copy `cowrie/discord.py` to
-`etc/discord.py`, then start it:
+`etc/discord.py`, then start it.
+
+**Start with `jsonlog` only.** The example config ships with the abuseipdb, virustotal and
+discord outputs *disabled* on purpose: every one of them makes an outbound HTTP call while
+handling an event, and if your egress is filtered or slow, a session can stall while one of
+them waits. Get the honeypot capturing to a log file first, confirm that works, and only then
+enable the extras — one at a time, with a real key in each — so that when something goes
+quiet you know which one did it.
 
 ```bash
 docker compose config -q && echo "config ok"

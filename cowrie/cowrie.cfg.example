@@ -1,3 +1,13 @@
+# Example cowrie configuration.
+#
+# Copy to etc/cowrie.cfg and edit. Everything here is safe to commit: keys are placeholders,
+# and the output engines that make outbound API calls start DISABLED.
+#
+# Why disabled by default: abuseipdb, virustotal and the discord webhook all perform an
+# outbound HTTP request while handling a session event. On a host whose egress is filtered,
+# slow, or has no working DNS, one of those calls can block and the session appears to hang
+# right after the shell opens. Get logging working first, then enable them one at a time.
+
 [honeypot]
 hostname = srv-prod-01
 backend = shell
@@ -6,34 +16,54 @@ download_path = var/lib/cowrie/downloads
 state_path = var/lib/cowrie/state
 share_path = share/cowrie
 ttylog_path = var/lib/cowrie/tty
+
+# The IP this sensor pretends to be. Set it to your real public address: it is what gets
+# reported to abuse-feedback services, so a wrong value makes you look like the attacker.
 internet_facing_ip = 198.51.100.11
+
+# Free-form label. Shows up in the dashboard and in reports, so one per sensor is useful.
 sensor_name = sensor1
+
 [ssh]
 enabled = true
+# Inside the container cowrie listens on 2222; docker maps the host's :22 onto it.
 listen_endpoints = tcp:2222:interface=0.0.0.0
+# Make this match a real, current release of a real distribution. A banner announcing a
+# three-year-old OpenSSH is itself a tell that something is not what it claims to be.
 version = SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
 
 [telnet]
 enabled = true
 listen_endpoints = tcp:2223:interface=0.0.0.0
 
-[output_abuseipdb]
+# ---------------------------------------------------------------------------------------
+# Optional output engines. Each one needs a real credential and makes network calls.
+# ---------------------------------------------------------------------------------------
 
+[output_abuseipdb]
+# https://www.abuseipdb.com/account/api -- set enabled = true and paste the key to use it.
 api_key = __API_KEY__
-enabled = true
+enabled = false
 rereport_after = 24
 tolerance_window = 120
 tolerance_attempts = 1
 dump_path = ${honeypot:state_path}/abuseipdb
+
 [output_virustotal]
-
+# https://www.virustotal.com/gui/my-apikey -- checks downloaded payloads by hash.
 api_key = __API_KEY__
-enabled = true
-[output_discord]
+enabled = false
 
+[output_discord]
+# Posts to a Discord channel webhook. Create one in the channel's Integrations settings.
+# Leave this off until you have confirmed the honeypot logs correctly without it.
 url = https://discord.com/api/webhooks/__WEBHOOK_ID__/__WEBHOOK_TOKEN__
-enabled = true
+enabled = false
 default_delay = 0.3
 retry_delay = 2
 max_retries = 5
+
+# This key is only understood by the patched discord.py in this repository (see NOTICE).
+# Upstream cowrie posts every event, which floods the channel with each keystroke a bot
+# types. The allowlist below keeps connections, login attempts and payload downloads.
 events = cowrie.session.connect,cowrie.login.failed,cowrie.login.success,cowrie.session.file_download
