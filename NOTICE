@@ -1,0 +1,11 @@
+Third-party components
+======================
+
+Cowrie (https://github.com/cowrie/cowrie) is BSD-3-Clause licensed. `cowrie/discord.py` in
+this repository is a modified copy of Cowrie's Discord output module: it adds an events
+allowlist so the channel is not flooded by every keystroke a bot types. Cowrie's licence
+and copyright apply to that file; see the upstream project.
+
+DB-IP Lite (https://db-ip.com) is used for offline geo lookups. It is not redistributed here
+-- the installer downloads it -- both because it is large and because it carries its own
+attribution requirements.

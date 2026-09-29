@@ -1,0 +1,10 @@
+[Unit]
+Description=Monthly geo database refresh (DB-IP publishes early in the month)
+
+[Timer]
+OnCalendar=*-*-05 04:30:00
+Persistent=true
+RandomizedDelaySec=1800
+
+[Install]
+WantedBy=timers.target

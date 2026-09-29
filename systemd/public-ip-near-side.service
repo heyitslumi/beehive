@@ -1,0 +1,10 @@
+[Unit]
+Description=Keep 198.51.100.13 reachable (ARP) and forwardable on sensor2
+After=network-online.target tailscaled.service docker.service
+Wants=network-online.target tailscaled.service
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c "sysctl -qw net.ipv4.conf.enp5s0.proxy_arp=1 net.ipv4.conf.all.rp_filter=2 net.ipv4.ip_forward=1; /sbin/ip neigh replace proxy 198.51.100.13 dev enp5s0; /sbin/iptables -C FORWARD -d 198.51.100.13/32 -j ACCEPT || /sbin/iptables -I FORWARD 1 -d 198.51.100.13/32 -j ACCEPT; /sbin/iptables -C FORWARD -s 198.51.100.13/32 -j ACCEPT || /sbin/iptables -I FORWARD 1 -s 198.51.100.13/32 -j ACCEPT"
+[Install]
+WantedBy=multi-user.target

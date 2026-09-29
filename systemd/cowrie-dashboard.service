@@ -1,0 +1,14 @@
+[Unit]
+Description=Cowrie Honeypot Live Stats Dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/cowrie-dashboard
+ExecStart=/usr/bin/python3 /root/cowrie-dashboard/server.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

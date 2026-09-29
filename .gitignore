@@ -1,0 +1,19 @@
+# credentials -- never commit these
+*.token
+alloy-token
+ipinfo.token
+.env
+*.key
+*.pem
+# runtime data: other people's malware and other people's IP addresses
+var/lib/cowrie/
+var/log/cowrie/
+downloads/
+*.sqlite
+beszel_data/
+# caches and datasets
+geo-enrich.json
+*.mmdb
+*.mmdb.gz
+__pycache__/
+.venv/

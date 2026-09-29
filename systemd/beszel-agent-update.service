@@ -1,0 +1,7 @@
+[Unit]
+Description=Update beszel-agent if needed
+Wants=beszel-agent.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/beszel-agent/beszel-agent update

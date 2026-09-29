@@ -1,0 +1,12 @@
+[Unit]
+Description=Source-preserving IP link to sensor2 (carrier for public IPv4 198.51.100.13)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -w 0:0 -p __ADMIN_SSH_PORT__ -i /root/.ssh/id_ed25519 -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes root@100.64.0.18 "ip addr replace 10.77.77.1/30 dev tun0; ip link set tun0 mtu 1400 up; sysctl -qw net.ipv4.conf.tun0.rp_filter=0; iptables -t nat -D POSTROUTING -d 198.51.100.13/32 -o tailscale0 -j MASQUERADE 2>/dev/null; ip route replace 198.51.100.13/32 dev tun0; ip rule del priority 5200 2>/dev/null; ip rule add priority 5200 to 198.51.100.13/32 lookup main; iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null || iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu; exec sleep infinity"
+ExecStartPost=/bin/bash -c "sleep 3; ip addr replace 10.77.77.2/30 dev tun0; ip link set tun0 mtu 1400 up; sysctl -qw net.ipv4.conf.tun0.rp_filter=0; ip rule del priority 5202 2>/dev/null; ip rule add priority 5202 from 198.51.100.13 lookup 77; ip route replace default dev tun0 table 77"
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target

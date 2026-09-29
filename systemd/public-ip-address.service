@@ -1,0 +1,10 @@
+[Unit]
+Description=Hold public IPv4 198.51.100.13 (routed from sensor2)
+After=network-online.target wg-quick@wg0.service
+Wants=network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c "/sbin/ip addr replace 198.51.100.13/32 dev lo"
+[Install]
+WantedBy=multi-user.target

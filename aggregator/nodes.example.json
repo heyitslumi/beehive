@@ -1,0 +1,50 @@
+{
+  "_comment": "fleet map for the aggregator. each sensor runs cowrie + its own dashboard; the aggregator merges them. 'host' is a tailnet address because these panels are never publicly bound.",
+  "sensors": [
+    {
+      "name": "sensor1",
+      "host": "127.0.0.1:8099",
+      "role": "aggregator + sensor"
+    },
+    {
+      "name": "sensor2",
+      "host": "100.64.0.11:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor3",
+      "host": "100.64.0.12:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor4",
+      "host": "100.64.0.13:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor5",
+      "host": "100.64.0.14:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor6",
+      "host": "100.64.0.15:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor7",
+      "host": "100.64.0.16:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor8",
+      "host": "100.64.0.17:8099",
+      "role": "sensor"
+    },
+    {
+      "name": "sensor9",
+      "host": "100.64.0.18:8099",
+      "role": "sensor"
+    }
+  ]
+}

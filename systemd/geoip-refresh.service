@@ -1,0 +1,9 @@
+[Unit]
+Description=Refresh the honeypot geo database (DB-IP Lite) and push it to the fleet
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/hp/97-refresh-geoip.sh
+TimeoutStartSec=1800

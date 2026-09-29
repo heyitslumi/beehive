@@ -1,0 +1,8 @@
+wallet seed phrase backup - 2026
+
+abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon
+abandon about
+
+(that is the public BIP-39 test vector: a real, universally known dummy phrase.
+ it has never held and can never hold funds. it exists so bots have something
+ tempting to exfiltrate and lose.)

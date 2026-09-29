@@ -1,0 +1,39 @@
+[honeypot]
+hostname = srv-prod-01
+backend = shell
+log_path = var/log/cowrie
+download_path = var/lib/cowrie/downloads
+state_path = var/lib/cowrie/state
+share_path = share/cowrie
+ttylog_path = var/lib/cowrie/tty
+internet_facing_ip = 198.51.100.11
+sensor_name = sensor1
+[ssh]
+enabled = true
+listen_endpoints = tcp:2222:interface=0.0.0.0
+version = SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
+
+[telnet]
+enabled = true
+listen_endpoints = tcp:2223:interface=0.0.0.0
+
+[output_abuseipdb]
+
+api_key = __API_KEY__
+enabled = true
+rereport_after = 24
+tolerance_window = 120
+tolerance_attempts = 1
+dump_path = ${honeypot:state_path}/abuseipdb
+[output_virustotal]
+
+api_key = __API_KEY__
+enabled = true
+[output_discord]
+
+url = https://discord.com/api/webhooks/__WEBHOOK_ID__/__WEBHOOK_TOKEN__
+enabled = true
+default_delay = 0.3
+retry_delay = 2
+max_retries = 5
+events = cowrie.session.connect,cowrie.login.failed,cowrie.login.success,cowrie.session.file_download

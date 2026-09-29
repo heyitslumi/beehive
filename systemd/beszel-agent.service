@@ -1,0 +1,32 @@
+[Unit]
+Description=Beszel Agent Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment="PORT=45876"
+Environment="KEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBOZHKfWxk4rso9wQkl3XCPhDoXFrSrIvsUvP+VWI+iH"
+Environment="TOKEN=54c9d7b4-3bf2-48f5-8ebf-bf1610650f65"
+Environment="HUB_URL=https://beszel.example.com"
+# Environment="EXTRA_FILESYSTEMS=sdb"
+ExecStart=/opt/beszel-agent/beszel-agent
+User=beszel
+Restart=on-failure
+RestartSec=5
+StateDirectory=beszel-agent
+
+# Security/sandboxing settings
+KeyringMode=private
+LockPersonality=yes
+ProtectClock=yes
+ProtectHome=read-only
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectSystem=strict
+RemoveIPC=yes
+RestrictSUIDSGID=true
+
+
+
+[Install]
+WantedBy=multi-user.target
