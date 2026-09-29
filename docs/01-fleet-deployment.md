@@ -51,14 +51,27 @@ node uses 8099. Overwriting a node's copy with the dev copy silently changes tha
 the service in a **crash loop**: `systemctl is-active` still answers `active` (each restart briefly
 succeeds), while the port the aggregator expects answers nothing.
 
-- Make node-specific values **environment variables with sane defaults** (`DASH_PORT`), and set the
-  per-node value in a systemd drop-in (`/etc/systemd/system/<unit>.service.d/*.conf`). Then one file
-  is deployable everywhere and the constant stops being invisible state.
+**The port is not the only per-node constant -- the bind address is one too.** A node the aggregator
+reaches over the tailnet must listen on its **tailnet IP**; a node with local nginx wants
+`127.0.0.1`. Overwrite either and the node looks alive locally while being unreachable from the
+aggregator.
+
+- Make node-specific values **environment variables with sane defaults** (`DASH_PORT`, `DASH_HOST`) and
+  set the per-node values in a systemd drop-in (`/etc/systemd/system/<unit>.service.d/*.conf`). Then
+  one file is deployable everywhere and the constants stop being invisible state.
+- Let the bind address be a **comma-separated list** (`DASH_HOST=127.0.0.1,100.64.0.14`) so a node can
+  serve loopback *and* its tailnet IP, and start one listener per address. Never `0.0.0.0` as the easy
+  way out: that is what exposes a honeypot dashboard to the internet. One unusable address (no tailnet
+  yet at boot) must not kill the others -- catch per-address and keep serving.
 - Before believing a push landed: `systemctl show -p NRestarts` (`NRestarts=47` plus `active` is a
   crash loop, not a deployment), the real bind (`ss -tlnp | grep <port>`), and one live API request.
 - `Address already in use` in the journal means something else owns that port -- identify the owner
   (`ss -tulpn`) before touching the service; the loop may be self-perpetuating after one first
   failure rather than a port actually being held.
+- **Read the failure shape before guessing which constant broke.** *Connection refused, fast, from
+  every remote node at once* is a bind address (nothing is listening where the caller looks). *Slow
+  timeouts* are a hang or a saturated box. *`active` with a rising `NRestarts`* is a crash loop. The
+  port being wrong shows up as refused on one node, not all of them.
 
 ### Reaching sensor2 specifically
 

@@ -1,0 +1,119 @@
+[
+  {
+    "uid": "fleet-disk-85",
+    "title": "disk above 85%",
+    "ruleGroup": "fleet-health",
+    "folderUID": "__FOLDER_UID__",
+    "condition": "C",
+    "for": "10m",
+    "noDataState": "OK",
+    "execErrState": "OK",
+    "labels": { "kind": "disk", "severity": "warning" },
+    "annotations": {
+      "summary": "{{ $labels.node }} root filesystem above 85% ({{ printf \"%.1f\" $values.C.Value }}%)",
+      "description": "Disk on {{ $labels.node }} is filling. Find the consumer with: du -x -h --max-depth=2 / | sort -rh | head -14 ; then journalctl --disk-usage and docker system df."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "datasourceUid": "grafanacloud-prom",
+        "relativeTimeRange": { "from": 600, "to": 0 },
+        "model": {
+          "refId": "A",
+          "expr": "100 * (1 - (sum by (node) (node_filesystem_avail_bytes{mountpoint=\"/\",fstype!~\"tmpfs|overlay|squashfs\"}) / sum by (node) (node_filesystem_size_bytes{mountpoint=\"/\",fstype!~\"tmpfs|overlay|squashfs\"})))",
+          "instant": true,
+          "range": false
+        }
+      },
+      {
+        "refId": "C",
+        "datasourceUid": "__expr__",
+        "relativeTimeRange": { "from": 600, "to": 0 },
+        "model": {
+          "refId": "C",
+          "type": "threshold",
+          "expression": "A",
+          "conditions": [{ "evaluator": { "type": "gt", "params": [85] } }]
+        }
+      }
+    ]
+  },
+  {
+    "uid": "fleet-mem-90",
+    "title": "memory above 90%",
+    "ruleGroup": "fleet-health",
+    "folderUID": "__FOLDER_UID__",
+    "condition": "C",
+    "for": "15m",
+    "noDataState": "OK",
+    "execErrState": "OK",
+    "labels": { "kind": "memory", "severity": "warning" },
+    "annotations": {
+      "summary": "{{ $labels.node }} memory above 90% ({{ printf \"%.1f\" $values.C.Value }}%)",
+      "description": "Sustained memory pressure on {{ $labels.node }}. Check swap with free -h; on a small box consider moving a container off it."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "datasourceUid": "grafanacloud-prom",
+        "relativeTimeRange": { "from": 900, "to": 0 },
+        "model": {
+          "refId": "A",
+          "expr": "100 * (1 - (sum by (node) (node_memory_MemAvailable_bytes) / sum by (node) (node_memory_MemTotal_bytes)))",
+          "instant": true,
+          "range": false
+        }
+      },
+      {
+        "refId": "C",
+        "datasourceUid": "__expr__",
+        "relativeTimeRange": { "from": 900, "to": 0 },
+        "model": {
+          "refId": "C",
+          "type": "threshold",
+          "expression": "A",
+          "conditions": [{ "evaluator": { "type": "gt", "params": [90] } }]
+        }
+      }
+    ]
+  },
+  {
+    "uid": "fleet-node-missing",
+    "title": "node metrics missing",
+    "ruleGroup": "fleet-health",
+    "folderUID": "__FOLDER_UID__",
+    "condition": "C",
+    "for": "5m",
+    "noDataState": "Alerting",
+    "execErrState": "OK",
+    "labels": { "kind": "node", "severity": "critical" },
+    "annotations": {
+      "summary": "{{ $labels.node }} stopped reporting (alloy down or box unreachable)",
+      "description": "No metrics from {{ $labels.node }} for 5m: box down/unreachable or alloy stopped. Check: systemctl is-active alloy on the node, then the tailnet link."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "datasourceUid": "grafanacloud-prom",
+        "relativeTimeRange": { "from": 300, "to": 0 },
+        "model": {
+          "refId": "A",
+          "expr": "up{job=\"integrations/unix\"}",
+          "instant": true,
+          "range": false
+        }
+      },
+      {
+        "refId": "C",
+        "datasourceUid": "__expr__",
+        "relativeTimeRange": { "from": 300, "to": 0 },
+        "model": {
+          "refId": "C",
+          "type": "threshold",
+          "expression": "A",
+          "conditions": [{ "evaluator": { "type": "lt", "params": [1] } }]
+        }
+      }
+    ]
+  }
+]

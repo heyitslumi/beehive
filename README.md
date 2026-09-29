@@ -70,15 +70,20 @@ A honeypot dashboard publicly reachable is an oxymoron, and one of the bugs docu
 
 | path | what it is |
 | --- | --- |
+| `docs/00-quickstart.md` | **bare VPS to first captured login** — start here |
 | `aggregator/` | the fleet merge service, its systemd unit, the fleet map |
 | `cowrie/` | a scrubbed `cowrie.cfg.example`, the patched Discord output module, bait files |
 | `deploy/` | the actual ordered deploy recipes, scrubbed of credentials |
 | `docs/` | the operational write-ups — the reason to read this repo |
-| `grafana/` | dashboard JSON |
+| `grafana/` | dashboard JSON, plus panel-by-panel queries and the alert rules |
 | `systemd/` | unit files, including the public-IP transit pair |
 | `scripts/scrub-check.sh` | run before every push: fails on credential-shaped strings |
+| `SECURITY.md` | what a "vulnerability" even means for a honeypot |
 
 ## Standing up your own
+
+**Start with [`docs/00-quickstart.md`](docs/00-quickstart.md)** — bare VPS to first captured
+login, written in the order that avoids locking yourself out.
 
 The recipes in `deploy/` are numbered in the order they were run:
 
@@ -107,7 +112,7 @@ Deliberately, and permanently:
   addresses; it does not belong in git and would get the repository taken down
 - **no geo database** — 127MB, third-party, with its own attribution terms. Download it.
 - host names here are `sensor1..sensor9` and addresses come from the documentation ranges
-  (`198.51.100.0/24`) and CGNAT space (`100.64.0.0/10`). The mapping is cosmetic; the
+  (`198.51.100.0/24`) and CGNAT space (`100.64.0.11/10`). The mapping is cosmetic; the
   design is unchanged.
 
 ## If you run this

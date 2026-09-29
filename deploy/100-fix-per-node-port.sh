@@ -51,9 +51,9 @@ echo
 echo "=== fleet map sanity: each node answers on the port the aggregator expects ==="
 python3 - <<'PY'
 import json, urllib.request
-NODES = {"sensor1":"127.0.0.1:8099","sensor2":"100.64.0.18:8098","sensor5":"100.64.0.11:8099",
-         "sensor6":"100.64.0.12:8099","sensor7":"100.64.0.15:8099","sensor3":"100.64.0.16:8099",
-         "sensor4":"100.64.0.14:8099","sensor8":"100.64.0.13:8099","sensor9":"100.64.0.19:8099"}
+NODES = {"sensor1":"127.0.0.1:8099","sensor2":"100.64.0.19:8098","sensor5":"100.64.0.12:8099",
+         "sensor6":"100.64.0.12:8099","sensor7":"100.64.0.15:8099","sensor3":"100.64.0.17:8099",
+         "sensor4":"100.64.0.14:8099","sensor8":"100.64.0.13:8099","sensor9":"100.64.0.20:8099"}
 for name, host in NODES.items():
     try:
         with urllib.request.urlopen("http://%s/api/server-name" % host, timeout=15) as r:

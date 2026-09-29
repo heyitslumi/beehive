@@ -13,14 +13,14 @@ mkdir -p "$STAGE"
 # node -> "tailnet IP:port"
 declare -A BIND=(
   [sensor1]="127.0.0.1:8099"
-  [sensor2]="100.64.0.18:8098"
-  [sensor3]="100.64.0.16:8099"
+  [sensor2]="100.64.0.19:8098"
+  [sensor3]="100.64.0.17:8099"
   [sensor4]="100.64.0.14:8099"
-  [sensor5]="100.64.0.11:8099"
+  [sensor5]="100.64.0.12:8099"
   [sensor6]="100.64.0.12:8099"
   [sensor7]="100.64.0.15:8099"
   [sensor8]="100.64.0.13:8099"
-  [sensor9]="100.64.0.19:8099"
+  [sensor9]="100.64.0.20:8099"
 )
 
 gen_server() {  # $1 = node
@@ -74,9 +74,9 @@ echo
 echo "=== verify: every node answers the aggregator's exact port ==="
 python3 - <<'PY'
 import json, urllib.request, time
-BIND = {"sensor1":"127.0.0.1:8099","sensor2":"100.64.0.18:8098","sensor3":"100.64.0.16:8099",
-        "sensor4":"100.64.0.14:8099","sensor5":"100.64.0.11:8099","sensor6":"100.64.0.12:8099",
-        "sensor7":"100.64.0.15:8099","sensor8":"100.64.0.13:8099","sensor9":"100.64.0.19:8099"}
+BIND = {"sensor1":"127.0.0.1:8099","sensor2":"100.64.0.19:8098","sensor3":"100.64.0.17:8099",
+        "sensor4":"100.64.0.14:8099","sensor5":"100.64.0.12:8099","sensor6":"100.64.0.12:8099",
+        "sensor7":"100.64.0.15:8099","sensor8":"100.64.0.13:8099","sensor9":"100.64.0.20:8099"}
 bad = []
 for name, host in BIND.items():
     t0 = time.time()
