@@ -51,10 +51,13 @@ Install from Grafana's apt repo (keyring + `deb [signed-by=...] https://apt.graf
 
 ## Deployment gotchas
 
-- **Generate each config locally and scp it.** Shipping a heredoc over ssh (e.g. via
+- **Generate each config locally and scp it (or stage locally for single-host).** Shipping a heredoc over ssh (e.g. via
   `declare -f` + indent) breaks the `EOF` terminator once indented, and a malformed alloy
   config fails *silently*. Per-node staging file → `install -o root -g alloy -m 640` → delete
-  the staged copy afterwards so the token is not left lying around.
+  the staged copy afterwards so the token is not left lying around. For standalone / single-box
+  deployments, support `NODES="local"` directly to avoid self-SSH name resolution and host key failures.
+- **Avoid hardcoded repository or host staging directories.** Stage generated configs in portable
+  locations like `/tmp/.alloy-<node>.alloy` rather than hardcoded scratch paths that may not exist on a fresh server.
 - **`job_name` does not win over a target's own labels:** the unix exporter ships
   `job="integrations/unix"`, so query by the `node` label you added, not by job.
 - **Prove arrival from the backend, not from the service status.** `systemctl is-active alloy`

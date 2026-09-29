@@ -5,12 +5,30 @@ Three dashboards ship with this project:
 | dashboard | datasource | what it answers |
 | --- | --- | --- |
 | `cowrie-dashboard.json` | Infinity | one sensor: events, logins, attackers, world map |
-| `fleet-health` | Infinity | host vitals for the whole fleet, straight from `/api/system` |
+| `fleet-health.json` | Infinity | host vitals for the whole fleet, straight from each node's `/proc` |
 | `fleet-metrics` | Prometheus | the *history*: cpu/mem/disk/load/network over time |
 
-`cowrie-dashboard.json` imports directly (**Dashboards → New → Import**). The other two are
-documented here panel-by-panel with their exact queries, because a dashboard export is
-mostly layout JSON and the part you actually want to copy is the queries below.
+`cowrie-dashboard.json` and `fleet-health.json` import directly (**Dashboards → New →
+Import**). `fleet-metrics` is documented here panel-by-panel with its exact queries, because a
+dashboard export is mostly layout JSON and the part you actually want to copy is the queries
+below.
+
+## One variable instead of thirteen URLs
+
+Both importable dashboards address the API through a **textbox variable named `api`**, default
+`http://127.0.0.1:8099`. Set it once at the top of the dashboard and every panel follows. This
+exists because these files are committed *scrubbed* — the panel URLs cannot contain a real
+hostname, so hardcoding one would only ever be wrong for somebody.
+
+The one thing an import cannot guess is the **datasource UID**: both files reference
+`"uid": "grafanacloud-infinity"`. If your Infinity datasource has a different UID, replace it
+(13 panels in `cowrie-dashboard.json`, 7 in `fleet-health.json`) or create your datasource with
+that UID.
+
+And if Grafana runs in the cloud while the API is bound to loopback, nothing above works until
+you run the PDC agent with `--network host` — a bridge-mode container's `127.0.0.1` is the
+container's own loopback. Full recipe in `docs/00-quickstart.md`, step 6.
+
 
 ## Datasources you need first
 
@@ -67,6 +85,11 @@ is why the fleet-level stats are wired to the `all` endpoint specifically.
 
 ## Notes that cost time to learn
 
+- **Infinity needs the column *types*, not just the columns.** The geomap reads
+  `{api}/api/flat/geo?limit=250` with `lat`, `lon` and `hits` declared as `Number`. A `lat`
+  left as a string plots nothing and reports no error — the panel is simply empty forever.
+- **Parser `backend`, not `frontend`.** `Backend` is what lets Infinity handle numbers and
+  timestamps server-side; `Frontend` is the legacy path and quietly changes types.
 - **Alert queries need `instant: true`.** Without it a rule reports health `ok` while erroring
   and never fires. See `docs/06-grafana-alerting.md`.
 - **A graph with no data is not a graph with zero.** Before debugging a panel, curl the API it

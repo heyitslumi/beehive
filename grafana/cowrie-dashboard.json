@@ -1,1 +1,1191 @@
-{"uid": "cowrie-sensor1", "title": "cowrie honeypot // sensor1", "tags": ["honeypot", "cowrie", "security"], "timezone": "browser", "editable": true, "refresh": "1m", "time": {"from": "now-7d", "to": "now"}, "schemaVersion": 39, "version": 0, "panels": [{"id": 1, "type": "stat", "title": "total events", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 0, "y": 0}, "description": "every event cowrie has logged (connect, auth, command, download)", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/total_events/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 2, "type": "stat", "title": "unique attackers", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 4, "y": 0}, "description": "distinct source IPs seen", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/unique_ips_count/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 3, "type": "stat", "title": "logins ACCEPTED", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 8, "y": 0}, "description": "bots that got in and entered the sandbox", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/logins_success/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 4, "type": "stat", "title": "logins failed", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 12, "y": 0}, "description": "rejected auth attempts", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/logins_failed/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 5, "type": "stat", "title": "commands run", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 16, "y": 0}, "description": "commands typed inside the fake shell", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/commands_count/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 6, "type": "stat", "title": "payloads downloaded", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 5, "w": 4, "x": 20, "y": 0}, "description": "malware the bots tried to fetch", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/summary", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "/downloads_count/", "values": false}, "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "textMode": "auto", "wideLayout": true}, "fieldConfig": {"defaults": {"unit": "short", "mappings": []}, "overrides": []}}, {"id": 7, "type": "timeseries", "title": "attack volume per hour", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 0, "y": 5}, "description": "hourly buckets over the last 7 days. note: the honeypot log is stamped in Europe/Paris local time with a Z suffix, so panel times read 2h ahead of UTC.", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "timeseries", "parser": "backend", "url": "https://sensor1.example.com/api/flat/timeseries?hours=168", "url_options": {"method": "GET"}, "root_selector": "", "columns": [{"selector": "ts", "text": "Time", "type": "timestamp"}, {"selector": "events", "text": "events", "type": "number"}, {"selector": "logins_failed", "text": "logins_failed", "type": "number"}, {"selector": "logins_success", "text": "logins_success", "type": "number"}], "filters": []}], "fieldConfig": {"defaults": {"unit": "short", "custom": {"drawStyle": "line", "lineInterpolation": "smooth", "showPoints": "never", "spanNulls": true, "fillOpacity": 12, "lineWidth": 2}}, "overrides": [{"matcher": {"id": "byName", "options": "events"}, "properties": [{"id": "displayName", "value": "events"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#f472b6"}}]}, {"matcher": {"id": "byName", "options": "logins_failed"}, "properties": [{"id": "displayName", "value": "logins_failed"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#f43f5e"}}]}, {"matcher": {"id": "byName", "options": "logins_success"}, "properties": [{"id": "displayName", "value": "logins_success"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#4ade80"}}]}]}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true, "calcs": ["sum", "max"]}, "tooltip": {"mode": "multi", "sort": "desc"}}}, {"id": 8, "type": "timeseries", "title": "bot behaviour per hour", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 12, "y": 5}, "description": "what the trapped bots actually did: shell commands, payload fetches, and how many distinct IPs were active.", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "timeseries", "parser": "backend", "url": "https://sensor1.example.com/api/flat/timeseries?hours=168", "url_options": {"method": "GET"}, "root_selector": "", "columns": [{"selector": "ts", "text": "Time", "type": "timestamp"}, {"selector": "commands", "text": "commands", "type": "number"}, {"selector": "downloads", "text": "downloads", "type": "number"}, {"selector": "unique_ips", "text": "unique_ips", "type": "number"}], "filters": []}], "fieldConfig": {"defaults": {"unit": "short", "custom": {"drawStyle": "line", "lineInterpolation": "smooth", "showPoints": "never", "spanNulls": true, "fillOpacity": 12, "lineWidth": 2}}, "overrides": [{"matcher": {"id": "byName", "options": "commands"}, "properties": [{"id": "displayName", "value": "commands"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#38bdf8"}}]}, {"matcher": {"id": "byName", "options": "downloads"}, "properties": [{"id": "displayName", "value": "downloads"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#fbbf24"}}]}, {"matcher": {"id": "byName", "options": "unique_ips"}, "properties": [{"id": "displayName", "value": "unique_ips"}, {"id": "custom.fillOpacity", "value": 12}, {"id": "custom.lineWidth", "value": 2}, {"id": "color", "value": {"mode": "fixed", "fixedColor": "#a78bfa"}}]}]}, "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true, "calcs": ["sum", "max"]}, "tooltip": {"mode": "multi", "sort": "desc"}}}, {"id": 9, "type": "table", "title": "top attackers", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 0, "y": 14}, "description": "ranked by total events. includes accepted logins and commands run, so bots that got in stand out.", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/flat/attackers?limit=25", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "reducer": ["sum"], "countRows": false, "fields": ""}}, "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": false, "filterable": true, "minWidth": 60}}, "overrides": [{"matcher": {"id": "byName", "options": "ip"}, "properties": [{"id": "custom.width", "value": 150}]}, {"matcher": {"id": "byName", "options": "country"}, "properties": [{"id": "custom.width", "value": 140}]}]}}, {"id": 10, "type": "table", "title": "live event stream", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 12, "y": 14}, "description": "newest 25 raw events (refreshes with the dashboard).", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/flat/events", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "reducer": ["sum"], "countRows": false, "fields": ""}}, "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": false, "filterable": true, "minWidth": 60}}, "overrides": [{"matcher": {"id": "byName", "options": "ts"}, "properties": [{"id": "custom.width", "value": 90}]}, {"matcher": {"id": "byName", "options": "ev"}, "properties": [{"id": "custom.width", "value": 170}]}, {"matcher": {"id": "byName", "options": "ip"}, "properties": [{"id": "custom.width", "value": 130}]}]}}, {"id": 11, "type": "table", "title": "commands captured", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 0, "y": 23}, "description": "commands typed by bots inside the sandbox shell.", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/flat/commands", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "reducer": ["sum"], "countRows": false, "fields": ""}}, "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": false, "filterable": true, "minWidth": 60}}, "overrides": [{"matcher": {"id": "byName", "options": "ip"}, "properties": [{"id": "custom.width", "value": 150}]}]}}, {"id": 12, "type": "table", "title": "payload downloads (sha256)", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "gridPos": {"h": 9, "w": 12, "x": 12, "y": 23}, "description": "malware URLs the bots fetched. sha256 can be looked up on VirusTotal.", "targets": [{"refId": "A", "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "grafanacloud-infinity"}, "type": "json", "source": "url", "format": "table", "parser": "backend", "url": "https://sensor1.example.com/api/flat/downloads", "url_options": {"method": "GET"}, "root_selector": "", "columns": [], "filters": []}], "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "reducer": ["sum"], "countRows": false, "fields": ""}}, "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": false, "filterable": true, "minWidth": 60}}, "overrides": [{"matcher": {"id": "byName", "options": "ip"}, "properties": [{"id": "custom.width", "value": 140}]}, {"matcher": {"id": "byName", "options": "sha"}, "properties": [{"id": "custom.width", "value": 240}]}]}}]}
+{
+  "uid": "cowrie-sensor",
+  "title": "cowrie honeypot // sensor",
+  "tags": [
+    "honeypot",
+    "cowrie",
+    "security"
+  ],
+  "timezone": "browser",
+  "editable": true,
+  "refresh": "1m",
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "schemaVersion": 39,
+  "version": 0,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "total events",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "description": "every event cowrie has logged (connect, auth, command, download)",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/total_events/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "unique attackers",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "description": "distinct source IPs seen",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/unique_ips_count/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "logins ACCEPTED",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "description": "bots that got in and entered the sandbox",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/logins_success/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "logins failed",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "description": "rejected auth attempts",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/logins_failed/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "commands run",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "description": "commands typed inside the fake shell",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/commands_count/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "payloads downloaded",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "description": "malware the bots tried to fetch",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/summary",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/downloads_count/",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "attack volume per hour",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "description": "hourly buckets over the last 7 days. note: the honeypot log is stamped in Europe/Paris local time with a Z suffix, so panel times read 2h ahead of UTC.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "parser": "backend",
+          "url": "${api}/api/flat/timeseries?hours=168",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "ts",
+              "text": "Time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "events",
+              "text": "events",
+              "type": "number"
+            },
+            {
+              "selector": "logins_failed",
+              "text": "logins_failed",
+              "type": "number"
+            },
+            {
+              "selector": "logins_success",
+              "text": "logins_success",
+              "type": "number"
+            }
+          ],
+          "filters": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "showPoints": "never",
+            "spanNulls": true,
+            "fillOpacity": 12,
+            "lineWidth": 2
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "events"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#f472b6"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "logins_failed"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "logins_failed"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#f43f5e"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "logins_success"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "logins_success"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4ade80"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "sum",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "bot behaviour per hour",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "description": "what the trapped bots actually did: shell commands, payload fetches, and how many distinct IPs were active.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "parser": "backend",
+          "url": "${api}/api/flat/timeseries?hours=168",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "ts",
+              "text": "Time",
+              "type": "timestamp"
+            },
+            {
+              "selector": "commands",
+              "text": "commands",
+              "type": "number"
+            },
+            {
+              "selector": "downloads",
+              "text": "downloads",
+              "type": "number"
+            },
+            {
+              "selector": "unique_ips",
+              "text": "unique_ips",
+              "type": "number"
+            }
+          ],
+          "filters": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "showPoints": "never",
+            "spanNulls": true,
+            "fillOpacity": 12,
+            "lineWidth": 2
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "commands"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "commands"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#38bdf8"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "downloads"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "downloads"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#fbbf24"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "unique_ips"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "unique_ips"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#a78bfa"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "sum",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "table",
+      "title": "top attackers",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "description": "ranked by total events. includes accepted logins and commands run, so bots that got in stand out.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/flat/attackers?limit=25",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": true,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ip"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "country"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "type": "table",
+      "title": "live event stream",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "description": "newest 25 raw events (refreshes with the dashboard).",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/flat/events",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": true,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ts"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ev"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ip"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "type": "table",
+      "title": "commands captured",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "description": "commands typed by bots inside the sandbox shell.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/flat/commands",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": true,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ip"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": "table",
+      "title": "payload downloads (sha256)",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "description": "malware URLs the bots fetched. sha256 can be looked up on VirusTotal.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/flat/downloads",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": true,
+            "minWidth": 60
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ip"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sha"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 240
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "type": "geomap",
+      "title": "attackers world map",
+      "description": "geoip of every source IP, sized by event count. needs the local mmdb (see docs/04) \u2014 the dashboard API resolves city/country itself and never calls a rate-limited public geo API.",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "grafanacloud-infinity"
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "grafanacloud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "${api}/api/flat/geo?limit=250",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ],
+      "options": {
+        "view": {
+          "id": "zero",
+          "lat": 25,
+          "lon": 5,
+          "zoom": 1.4
+        },
+        "controls": {
+          "showZoom": true,
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showScale": false,
+          "showDebug": false
+        },
+        "basemap": {
+          "type": "default",
+          "name": "Layer 0",
+          "config": {
+            "showLabels": true
+          }
+        },
+        "layers": [
+          {
+            "type": "markers",
+            "name": "attackers",
+            "location": {
+              "mode": "coords",
+              "latitude": "lat",
+              "longitude": "lon"
+            },
+            "config": {
+              "style": {
+                "color": {
+                  "fixed": "#f43f5e"
+                },
+                "opacity": 0.75,
+                "size": {
+                  "field": "hits",
+                  "fixed": 5,
+                  "min": 3,
+                  "max": 18
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "textConfig": {
+                  "text": "city",
+                  "fontSize": 11
+                }
+              },
+              "showLegend": false,
+              "tooltip": true
+            },
+            "tooltip": true
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "api",
+        "label": "honeypot API",
+        "type": "textbox",
+        "description": "base URL of the dashboard API. single node: http://127.0.0.1:8099. fleet: the aggregator, e.g. http://100.64.0.11:8099. Grafana Cloud reaches a loopback-bound API through a PDC agent running with --network host.",
+        "query": "http://127.0.0.1:8099",
+        "current": {
+          "selected": true,
+          "text": "http://127.0.0.1:8099",
+          "value": "http://127.0.0.1:8099"
+        },
+        "options": [
+          {
+            "selected": true,
+            "text": "http://127.0.0.1:8099",
+            "value": "http://127.0.0.1:8099"
+          }
+        ],
+        "hide": 0,
+        "skipUrlSync": false
+      }
+    ]
+  }
+}

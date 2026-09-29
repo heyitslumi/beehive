@@ -323,9 +323,73 @@ Grafana Alloy collects CPU, RAM, disk, and system stats and pushes them to Prome
    ```
 
 ### 2. Dashboards
+
 Import the JSON files from `grafana/` into your Grafana instance:
-- **`grafana/fleet-health.json`:** Visualizes host metrics (CPU, RAM, disk) scraped by Alloy from Prometheus.
-- **`grafana/cowrie-dashboard.json`:** Visualizes honeypot attack metrics. Requires the free **Grafana Infinity datasource** configured to point to your sensor's dashboard API (`http://<tailnet-ip>:8099`).
+
+- **`grafana/cowrie-dashboard.json`:** the honeypot itself — a `stat` row, hourly attack
+  volume, a live event stream, the command/payload tables, and a **Geomap** of attacker
+  locations.
+- **`grafana/fleet-health.json`:** host vitals for every node, read from each node's `/proc`
+  through the aggregator. No agent, no exporter — this is the "which box is about to fill its
+  disk" view.
+
+Both need the free **Grafana Infinity datasource**, and both address the API through a
+dashboard **textbox variable called `api`**, so you set the base URL once instead of editing
+every panel:
+
+| where the API lives | set `api` to |
+|---|---|
+| same host as Grafana (self-hosted) | `http://127.0.0.1:8099` |
+| another node, over the tailnet | `http://100.64.0.11:8099` (the aggregator) |
+| Grafana Cloud, PDC agent on the node | `http://127.0.0.1:8099` + `--network host`, see below |
+
+Both files ship with `"uid": "grafanacloud-infinity"` inside their panel datasource blocks.
+That is a *UID*, not a name — if yours differs, it is the one thing the import dialog cannot
+guess. Either create your datasource with that UID, or find-and-replace it after import.
+
+**Infinity will happily double your URL.** If the datasource settings have a Base URL set
+*and* the panel query carries a full `http://host:port/...`, you get
+`http://127.0.0.1:8099http://127.0.0.1:8099/api/summary` and a parse error. Leave Base URL
+**empty** and put the whole URL in the panel query, which is what these dashboards do.
+
+### Reaching a loopback-bound API from Grafana Cloud
+
+Step 4 tells you to bind the dashboard to `127.0.0.1`, and that is right — but Grafana Cloud
+cannot route to your loopback, and neither can a Docker container in bridge mode. Grafana
+Cloud's **Private Data Source Connect (PDC)** agent bridges the gap (Administration →
+Connections → Private data source connect). Then:
+
+```bash
+docker run -d --restart unless-stopped --name pdc-agent --network host \
+  grafana/pdc-agent:latest -token <your-pdc-token> \
+  -cluster <your-cluster> -gcloud-hosted-grafana-id <your-id>
+```
+
+**`--network host` is the whole trick.** On Linux, a bridge-mode container's `127.0.0.1` is
+the *container's* loopback, not the host's, and `host.docker.internal` is not populated by
+default — so the agent reports `socks connect → 127.0.0.1:8099: unknown error host
+unreachable` while the API is up and healthy. `--network host` puts the agent in the host's
+network namespace and the connection just works. Do not solve this by binding the dashboard
+to `0.0.0.0`.
+
+### The Geomap panel
+
+The map reads `GET {api}/api/flat/geo?limit=250`, which resolves city/country/lat/lon from the
+**local mmdb** (`docs/04-geo-and-latency.md`) — no rate-limited public geo API, and no API key.
+If you have not deployed the geo database yet the map will be empty rather than wrong.
+
+What matters in the panel config:
+
+- Infinity query: `Type: JSON`, `Source: URL`, `Format: Table`, **`Parser: Backend`**, and leave
+  `Columns` **empty**. Empty means auto-detect, and `lat`/`lon` arrive from the API as real JSON
+  numbers, so they type correctly. If you *do* add columns by hand you must set their types, and
+  a `lat` typed as `String` plots nothing while reporting no error at all — an empty map,
+  forever, with a green panel.
+- Geomap layer: `Location: Coords`, `Latitude field: lat`, `Longitude field: lon`,
+  `Size: hits`. Sizing markers by `hits` is what makes the map legible: one dot per IP is a
+  cloud, one dot per IP sized by volume is a map.
+- Basemap: leave it on **`default`**. It needs no API key, unlike most tile providers, and the
+  ones that do need keys have a habit of starting to.
 
 ### 3. Alert Rules
 Import or recreate the alert rules from `grafana/fleet-alert-rules.json`. Three are worth having immediately: disk > 85%, memory > 90%, and **node stopped reporting**.
