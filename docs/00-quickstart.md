@@ -57,27 +57,12 @@ ss -tlnp | grep ':22 ' || echo "22 is free"
 ```bash
 apt-get update && apt-get install -y git
 
-# Docker. The distro packages disagree on names -- Ubuntu has docker-compose-v2, Debian 13
-# calls it docker-compose-plugin, and Debian 12 ships no v2 compose at all (only the old
-# python one). Use Docker's own repository and the commands are identical on both.
-#
-# Swap 'debian' for 'ubuntu' in the two URLs and the codename comes out right either way.
-install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-chmod a+r /etc/apt/keyrings/docker.asc
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
-  > /etc/apt/sources.list.d/docker.list
-apt-get update
-apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# Docker. The official convenience script installs Docker Engine + the compose plugin
+# on both Debian and Ubuntu with one command. It is the shortest reliable path.
+curl -fsSL https://get.docker.com | sh
 
-# Prefer distro packages? Then:
-#   Ubuntu 24.04   apt-get install -y docker.io docker-compose-v2
-#   Debian 13      apt-get install -y docker.io docker-compose-plugin
-#   Debian 12      don't -- use the repository above
-
-# Verify before going further. "docker: 'compose' is not a docker command" is a confusing
-# failure to hit at 2am, and it means the plugin is missing.
+# Verify before going further. "docker: 'compose' is not a docker command" means
+# the plugin was not installed, and this catches it immediately.
 docker --version
 docker compose version
 
