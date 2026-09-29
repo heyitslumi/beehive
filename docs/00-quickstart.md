@@ -279,9 +279,10 @@ curl -s localhost:8099/api/summary | head -c 300
 reach it. A publicly reachable honeypot dashboard is both an information leak and an
 invitation.
 
-Verify the contract before trusting any graph — `deploy/verify-dashboard-contract.py` checks
-that every field the panels ask for actually exists, which is faster than staring at empty
-panels and guessing.
+Verify the contract before trusting any graph: pass the aggregator URL to
+`deploy/verify-dashboard-contract.py` (e.g. `python3 deploy/verify-dashboard-contract.py http://localhost:8099/api/node`
+or via `BEEHIVE_API_URL`). It checks that every field the panels ask for actually exists,
+which is faster than staring at empty panels and guessing.
 
 ## 5. Add more sensors
 
