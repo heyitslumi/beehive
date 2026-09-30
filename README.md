@@ -1,9 +1,14 @@
+<img src="assets/banner.png" alt="beehive — a fleet of SSH honeypots reporting to one hub" width="100%">
+
 # beehive
 
 A fleet of SSH/Telnet honeypots that report to one dashboard, plus the operational
 scaffolding to run it: aggregation, offline geo/ASN enrichment, Grafana dashboards,
 Discord alerting, and a technique for moving a public IPv4 onto a host in another
 datacenter **without losing the attacker's source IP**.
+
+*The banner is `assets/banner.png`, sized 1280×640 for GitHub's social preview card
+(Settings → Social preview).*
 
 Nine sensors. One hub. It has been running in production long enough to have collected
 ~335,000 events, ~32,000 successful bot logins and ~3,200 malware payloads — which is
