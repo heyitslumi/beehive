@@ -3,6 +3,27 @@
 Issues and pull requests are welcome. This is a small, opinionated repository, so a little
 context up front saves everyone a round trip.
 
+## How this repository is maintained
+
+Worth knowing before your first edit, because it is not the usual flow: **parts of this tree
+are generated, and editing them directly does not stick.**
+
+`docs/01`–`docs/09` are published copies of a private operational skill's reference notes.
+They are rebuilt from those sources, so an edit made directly to a file under `docs/` (on
+GitHub, or on disk) is reverted the next time the tree is regenerated. The same applies to
+the footer every doc page carries — that is applied by the build, not typed into the files.
+
+In practice:
+
+- **Prose and structure** (`README.md`, `docs/00-quickstart.md`, `docs/README.md`,
+  `CONTRIBUTING.md`, `SECURITY.md`, the dashboards, `cowrie/cowrie.cfg.example`) are authored
+  files and are safe to edit in place.
+- **`docs/01`–`docs/09`** should be changed by opening a PR against the generated file *and
+  saying so* — the maintainer will apply it to the source and regenerate. A PR that only
+  edits the generated copy cannot be merged as-is.
+- **Addresses and credentials are placeholders on purpose.** The build rewrites real host
+  names, public IPs and secrets into documentation ranges and tokens. Do not "fix" them back.
+
 ## Before you open a PR
 
 **Read the doc for the area you are touching.** Nearly every design decision here is the
