@@ -126,6 +126,7 @@ Do **not** skip step 1. It is the single most common way to lock yourself out of
 ```bash
 beehive/
 ├── docs/         # the operational write-ups — the reason to read this repo
+│   ├── README.md           # index of all ten pages
 │   └── 00-quickstart.md    # bare VPS to first captured login. start here
 ├── aggregator/   # the fleet merge service, its systemd unit, the fleet map
 ├── cowrie/       # scrubbed cowrie.cfg.example, patched Discord module, bait files
@@ -139,6 +140,7 @@ beehive/
 | path | what it is |
 | --- | --- |
 | `docs/00-quickstart.md` | **bare VPS to first captured login** — start here |
+| [`docs/README.md`](docs/README.md) | **index of all ten pages**, grouped by what you are trying to do |
 | `aggregator/` | the fleet merge service, its systemd unit, the fleet map |
 | `cowrie/` | a scrubbed `cowrie.cfg.example`, the patched Discord output module, bait files |
 | `deploy/` | the actual ordered deploy recipes, scrubbed of credentials |

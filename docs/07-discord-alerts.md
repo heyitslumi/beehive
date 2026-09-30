@@ -81,5 +81,5 @@ the container hostname, so alerts read `9e792646da7b` instead of `sensor1`.
 ---
 
 <div align="center">
-  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+  <sub><a href="../README.md">← back to the README</a> · <a href="./README.md">docs index</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
 </div>
