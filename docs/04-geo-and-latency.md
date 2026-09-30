@@ -63,3 +63,9 @@ jq: [.results | to_entries[] | {refId:.key, status:.value.status,
 
 Batch several panel targets into one call. `status: 200` with the expected row count
 (e.g. 150 geo markers, 170 timeseries buckets) is the only evidence that matters.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

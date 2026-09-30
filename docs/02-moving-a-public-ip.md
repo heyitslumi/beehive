@@ -61,3 +61,9 @@ When a host must gain a public IPv4 that currently lives on a sibling node, the 
   addresses its own end, and the remote command that addresses the near end. One unit builds the
   whole link.
 - Roll back by disabling the units and putting the address back on the near NIC.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

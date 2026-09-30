@@ -78,3 +78,9 @@ A `/proc`-scraping JSON endpoint and `node_exporter` can disagree on free space:
 minutes apart while something is actively writing (logs, a package install) shows up as a
 several-point difference on a small disk. The time series is the truth; a single JSON snapshot
 is a moment.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

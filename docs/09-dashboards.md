@@ -41,3 +41,9 @@ Decoy credential files in the virtual filesystem (e.g. `/root/cowrie/honeyfs/roo
 ## Retention
 
 A daily cron that prunes downloads/tty recordings older than a couple of weeks and truncates the JSON log. Without it the log the dashboard re-parses every few seconds grows unbounded and the endpoint gets slower over time.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

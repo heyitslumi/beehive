@@ -115,3 +115,9 @@ the JSON APIs over the tailnet and fan them out from **one** public host:
 - Boxes behind provider NAT (e.g. Oracle) only forward the ports their console forwards — moving
   sshd to __ADMIN_SSH_PORT__ can make real SSH reachable *only* over the tailnet. Confirm before assuming.
 - A node at 100% disk cannot even pull the cowrie image: check `df -h /` before planning a deploy.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

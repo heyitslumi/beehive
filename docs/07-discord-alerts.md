@@ -77,3 +77,9 @@ the container hostname, so alerts read `9e792646da7b` instead of `sensor1`.
   `https://<host>/api/...` path that Grafana actually uses.
 - **Grafana Cloud needs the aggregator's public API**, so "lock down the dashboard" must never break
   `/api/*` — the HTML UI can be restricted, the API endpoints cannot.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

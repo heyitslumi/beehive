@@ -115,3 +115,9 @@ user actually reads. Note that the Composio meta-tool takes search queries as an
 also emits a resolved notification — harmless, and extra evidence. Re-GET the rules list and confirm
 only the real groups remain, the production rules read `health: ok` / `state: inactive`, and the
 per-node instance count is intact.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

@@ -77,3 +77,9 @@ than re-uploading the whole dashboard: `$.templating.list[0].query`,
 `$.templating.list[0].options`, `$.panels[7].description`, etc. Verify with
 `get_dashboard_summary` — its `panels[].description` values show whether each JSONPath
 index resolved to the panel you meant (off-by-one indexing is the usual mistake).
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

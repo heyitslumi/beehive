@@ -57,3 +57,9 @@ write a file that does not parse.
 - A node whose log directory is empty or missing must still serve zeroes, not 500s.
 - Fleet-wide, historic totals only become comparable *after* every node runs the window
   build — a mixed fleet makes some nodes look like they are surging.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>

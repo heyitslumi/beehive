@@ -421,3 +421,9 @@ Collected so you do not have to rediscover them:
   the aggregator reports a floor. Read the docs before quoting a figure.
 - **Forgetting retention.** You are accumulating other people's IP addresses. Decide a
   retention period on purpose, and configure it.
+
+---
+
+<div align="center">
+  <sub><a href="../README.md">← back to the README</a> · MIT · built for a <a href="https://github.com/cowrie/cowrie">Cowrie</a> fleet</sub>
+</div>
